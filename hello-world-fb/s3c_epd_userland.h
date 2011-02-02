@@ -13,84 +13,8 @@
  *	based on skeletonfb.c, sa1100fb.h, s3c2410fb.c
  */
 
-#ifndef _S3C_EPD_H_
-#define _S3C_EPD_H_
-
-#include <linux/interrupt.h>
-#include <linux/platform_device.h>
-
-
-
-/*
- *  Externs
- */
-
-
-//jw.choi 2009.10.16 #if defined(CONFIG_FB_EPD)
-extern int s3fb_mmap(struct fb_info *fb, struct vm_area_struct *vma);
-//c void epd_initial_images(void );
-//static int epd_show_logo(void *data);
-static void epd_show_logo(void);
-void make_white(void);
-void load_image_area( uint16_t , uint16_t , uint16_t , uint16_t , uint16_t);
-//void custom_write_part_area(unsigned int , unsigned int , unsigned int,unsigned int, uint8_t );
-void load_image_area_b( uint16_t , uint16_t,  uint16_t , uint16_t , uint16_t  ,uint8_t 	);
-void set_rotation_mode(uint16_t );
-void wait_for_bit(uint16_t , int , uint16_t );
-void load_image( uint16_t  );
-uint16_t read_reg( uint16_t  ); //For EPD Controller's Register Read
-void lcd_wrcmd(uint16_t );
-void lcd_wrdata(uint16_t);
-
-//jw.choi 2009.10.16 #endif
-
-
-//jw.choi 2009.10.16 #if defined(CONFIG_FB_EPD)
-
-#define X_RESOLUTION 600 
-#define Y_RESOLUTION 800 
-#define BIT_PER_PIX   4
-
-#define FB_TOTAL_SIZE X_RESOLUTION*Y_RESOLUTION*BIT_PER_PIX/8
-
-//jw.choi int EPD_ioctl(unsigned int ,unsigned long);
-int EPD_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg);
-
-#define START_X	0
-#define START_Y	0
-
-#ifdef CONFIG_E60K || CONFIG_E60
-
-//In 6 Inches..(mm Unit)
-#define SCREEN_WIDTH 92
-#define SCREEN_HEIGHT 120
-
-#elif CONFIG_E100K 
-
-//In 10 Inches..(mm Unit)	
-#define SCREEN_WIDTH 140
-#define SCREEN_HEIGHT 250
-
-#else
-
-//Other Inches..
-#define SCREEN_WIDTH 0 //This makes Qt automatically detect DPI settings
-#define SCREEN_HEIGHT 0 //This makes Qt automatically detect DPI settings
-
-#endif
-
-
-
-
-
-#define EPD_BUF_MAX 14
-#define EPD_BUF_MIN 0
-
-#define bpp_2	0
-#define bpp_3	1
-#define bpp_4	2
-#define bpp_5	3
-
+#ifndef _S3C_EPD_USERLAND_H_
+#define _S3C_EPD_USERLAND_H_
 
 /*---------- Structure Definitions ----------*/
 
@@ -107,7 +31,10 @@ int EPD_ioctl(struct fb_info *info, unsigned int cmd, unsigned long arg);
 
 //GC-FullUpdate(eFULL), GU-PartialUpdate(ePART), DU-PartialUpdate(ePART_SMOOTH), DU-PartialUpdate Async(ePART_FASTEST), GC-PartialUpdate(ePART_CLEAR) in order
 enum upd_type {eFULL , ePART, ePART_SMOOTH, ePART_FASTEST, ePART_CLEAR} upd_type_t; 
-	
+
+typedef         __u8            uint8_t;
+typedef         __u16           uint16_t;
+
 struct image_update_data {
 	uint16_t x;//	screen offset
 	uint16_t y;//	screen offset
@@ -165,20 +92,8 @@ struct fb_area {
 	int w; 
 	int h; 
 }; 
-
-struct EPD_data {
-	struct work_struct epd_update_async;
-	struct image_update_data *async_buf;
-};
 	
 	
-struct spi_flash_data
-{
-	int buf_size;
-	unsigned char *buf;
-
-};
-
 #define PDEBUG(fmt, args...)    printk("%s:%s:%d> " fmt, __FILE__,__func__, __LINE__, ##args)
 //typedef enum { OFF, IDLE, STANDBY, SLEEP, CPU_STANDBY } epd_state_t;
 
@@ -227,15 +142,6 @@ struct spi_flash_data
 
 
 //jw.choi 2009.10.16 #endif
-
-//------------------------------------------------------------------
-//jw.choi 2010.1.11 1MBit SPI Flash has 2 pieces of 64KByte Banks 
-//Bank 0 : Instruction + WD Waveform
-//Bank 1 : WE Waveform
-//------------------------------------------------------------------
-#define ADDR_SPI_INSTRUCTION 0x00
-#define ADDR_SPI_WD_WFM 0x886  
-#define ADDR_SPI_WE_WFM 0x10000
 
 #endif
 

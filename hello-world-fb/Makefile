@@ -6,7 +6,9 @@ BDIR=bin
 _OBJ = hello-world-fb.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: %.c
+HEADERS=s3c_epd_userland.h
+
+$(ODIR)/%.o: %.c $(HEADERS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(BDIR)/hello-fb: $(OBJ)
