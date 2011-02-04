@@ -31,6 +31,8 @@ void E60Screen::setDirty(const QRect &r)
 {
     ctrl_data->x = r.left();
     ctrl_data->y = r.top();
+    ctrl_data->data_x = r.left();
+    ctrl_data->data_y = r.top();
     ctrl_data->width = r.width();
     ctrl_data->height = r.height();
     // TODO send iotcl
