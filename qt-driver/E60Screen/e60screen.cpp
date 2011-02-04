@@ -27,8 +27,11 @@ E60Screen::E60Screen(int display_id) :
     ctrl_data->type=eFULL;
 }
 
-void E60Screen::setDirty(const QRect &r)
+void E60Screen::exposeRegion(QRegion region, int windowIndex)
 {
+    QLinuxFbScreen::exposeRegion(region, windowIndex);
+
+    QRect r = region.boundingRect();
     ctrl_data->x = r.left();
     ctrl_data->y = r.top();
     ctrl_data->data_x = r.left();

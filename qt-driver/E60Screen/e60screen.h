@@ -10,7 +10,7 @@ class E60Screen : public QLinuxFbScreen
 public:
     explicit E60Screen(int display_id);
 
-    virtual void setDirty(const QRect&);
+    virtual void exposeRegion(QRegion region, int windowIndex);
     virtual bool useOffscreen();
 
 private:
